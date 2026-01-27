@@ -1,0 +1,14 @@
+Администратор:
+
+Email: admin@sportevents.ru
+
+Пароль: 	
+
+
+
+Организатор:
+
+Email: organizer@sportevents.ru
+
+Пароль: organizer123
+
