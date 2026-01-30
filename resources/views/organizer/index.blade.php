@@ -12,7 +12,7 @@
                     </div>
 
                     <h3 class="text-muted mb-3">У вас пока нет мероприятий</h3>
-                    <a href="" class="btn btn-primary btn-gradient px-4">
+                    <a href="{{ route('organizer.events.create') }}" class="btn btn-primary btn-gradient px-4">
                         <i class="fas fa-plus me-2"></i> Создать мероприятие
                     </a>
                 </div>

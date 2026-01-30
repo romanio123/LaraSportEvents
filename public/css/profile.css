@@ -1,3 +1,4 @@
+
 .profile-container {
     background: #f8f9fa;
     padding: 80px 0;
@@ -15,10 +16,9 @@
 .profile-content {
     flex: 1;
     padding: 2rem 3rem;
-    max-width: calc(100% - 250px);
+    max-width: 100%;
 }
 
-/* Остальные стили остаются такими же как в предыдущем ответе */
 .nav-title {
     color: white;
     font-size: 1.5rem;
@@ -66,6 +66,17 @@
     font-size: 2rem;
     font-weight: 700;
     color: #2d3748;
+    margin: 0;
+}
+
+.profile-name-admin {
+    width: max-content;
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #f56565 0%, #ed64a6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: white;
     margin: 0;
 }
 
@@ -138,39 +149,6 @@
     word-break: break-word;
 }
 
-.role-badge, .status-badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    display: inline-block;
-}
-
-.role-badge.admin {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.role-badge.organizer {
-    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-    color: white;
-}
-
-.role-badge.user {
-    background: linear-gradient(135deg, #78909C 0%, #546E7A 100%);
-    color: white;
-}
-
-.status-badge.active {
-    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-    color: white;
-}
-
-.status-badge.inactive {
-    background: linear-gradient(135deg, #78909C 0%, #546E7A 100%);
-    color: white;
-}
-
 .logout-btn {
     background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
     color: white;
@@ -186,25 +164,6 @@
 .logout-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-}
-
-.edit-btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.edit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
 .logout-btn i, .edit-btn i {

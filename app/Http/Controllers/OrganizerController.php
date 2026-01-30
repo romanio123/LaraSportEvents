@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/OrganizerController.php
 
 namespace App\Http\Controllers;
 
@@ -20,5 +19,12 @@ class OrganizerController extends Controller
         return view('organizer.index', compact('user', 'events'));
     }
 
+    public function events()
+    {
+        $user = Auth::user();
+        $events = Event::where('user_id', $user->id)->latest()->paginate(10);
+
+        return view('organizer.events.index', compact('events'));
+    }
 
 }

@@ -22,7 +22,7 @@
                 <textarea rows="5" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;"></textarea>
             </div>
 
-            <button type="submit" style="padding: 1rem 2rem; background: #667eea; color: white; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer;">
+            <button type="submit" style="padding: 1rem 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer;">
                 Отправить
             </button>
         </form>

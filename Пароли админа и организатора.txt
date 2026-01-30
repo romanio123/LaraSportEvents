@@ -1,8 +1,24 @@
-Администратор:
+Пользователь:
+
+Email: dfghj@mail.ru
+
+Пароль: qwe123
+
+
+
+Администратор 1:
 
 Email: admin@sportevents.ru
 
-Пароль: 	
+Пароль: admin123
+
+
+
+Администратор 2:
+
+Email: twoadmin@sportevents.ru
+
+Пароль: admin123
 
 
 

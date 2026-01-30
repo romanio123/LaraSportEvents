@@ -7,7 +7,11 @@
 
             <div class="profile-content">
                 <div class="profile-header">
-                    <h1 class="profile-name">{{ $user->name }}</h1>
+                    @if($user->id == 1)
+                        <h1 class="profile-name-admin">{{ $user->name }}</h1>
+                    @else
+                        <h1 class="profile-name">{{ $user->name }}</h1>
+                    @endif
                     <div class="profile-divider"></div>
                 </div>
 
@@ -18,7 +22,6 @@
 
                         <div class="data-row">
                             <div class="data-label">
-                                <span class="data-number">1</span>
                                 <span>Имя</span>
                             </div>
                             <div class="data-value">
@@ -28,7 +31,6 @@
 
                         <div class="data-row">
                             <div class="data-label">
-                                <span class="data-number">2</span>
                                 <span>Электронная почта</span>
                             </div>
                             <div class="data-value">
@@ -38,23 +40,21 @@
 
                         <div class="data-row">
                             <div class="data-label">
-                                <span class="data-number">3</span>
                                 <span>Роль</span>
                             </div>
                             <div class="data-value">
                                 @if($user->role == 'admin')
-                                    <span class="role-badge admin">Администратор</span>
+                                    <span class="admin">Администратор</span>
                                 @elseif($user->role == 'organizer')
-                                    <span class="role-badge organizer">Организатор</span>
+                                    <span class="organizer">Организатор</span>
                                 @else
-                                    <span class="role-badge user">Пользователь</span>
+                                    <span class="user">Пользователь</span>
                                 @endif
                             </div>
                         </div>
 
                         <div class="data-row">
                             <div class="data-label">
-                                <span class="data-number">4</span>
                                 <span>Статус организатора</span>
                             </div>
                             <div class="data-value">
@@ -68,17 +68,6 @@
 
                         <div class="data-row">
                             <div class="data-label">
-                                <span class="data-number">5</span>
-                                <span>ID пользователя</span>
-                            </div>
-                            <div class="data-value">
-                                {{ $user->id }}
-                            </div>
-                        </div>
-
-                        <div class="data-row">
-                            <div class="data-label">
-                                <span class="data-number">6</span>
                                 <span>Дата регистрации</span>
                             </div>
                             <div class="data-value">
@@ -88,7 +77,6 @@
 
                         <div class="data-row">
                             <div class="data-label">
-                                <span class="data-number">7</span>
                                 <span>Последнее обновление</span>
                             </div>
                             <div class="data-value">
@@ -96,33 +84,13 @@
                             </div>
                         </div>
 
-                        @if(isset($user->city) && $user->city)
-                            <div class="data-row">
-                                <div class="data-label">
-                                    <span class="data-number">9</span>
-                                    <span>Город</span>
-                                </div>
-                                <div class="data-value">
-                                    {{ $user->city }}
-                                </div>
-                            </div>
-                        @endif
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline; margin-right: 10px;">
+                            @csrf
+                            <button type="submit" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Выйти
+                            </button>
+                        </form>
 
-                        <div class="data-row">
-                            <div class="data-label">
-                                <span class="data-number">10</span>
-                                <span>Управление аккаунтом</span>
-                            </div>
-                            <div class="data-value">
-                                <form action="{{ route('logout') }}" method="POST" style="display: inline; margin-right: 10px;">
-                                    @csrf
-                                    <button type="submit" class="logout-btn">
-                                        <i class="fas fa-sign-out-alt"></i> Выйти
-                                    </button>
-                                </form>
-
-                            </div>
-                        </div>
                     </div>
 
                     @if($user->is_organizer || $user->role == 'admin')

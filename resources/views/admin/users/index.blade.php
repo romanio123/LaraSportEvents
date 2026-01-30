@@ -5,7 +5,8 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h1>Управление пользователями</h1>
             <a href="{{ route('admin.index') }}"
-               style="padding: 0.75rem 1.5rem; background: #667eea; color: white; text-decoration: none; border-radius: 5px;">
+               style="padding: 0.75rem 1.5rem; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+                color: white; text-decoration: none; border-radius: 8px;">
                 ← Назад в панель
             </a>
         </div>
@@ -25,22 +26,25 @@
                     <p style="color: #666;">В системе пока нет зарегистрированных пользователей</p>
                 </div>
             @else
+
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                        <tr style="border-bottom: 2px solid #667eea;">
-                            <th style="padding: 1rem; text-align: left;">ID</th>
-                            <th style="padding: 1rem; text-align: left;">Имя</th>
-                            <th style="padding: 1rem; text-align: left;">Email</th>
-                            <th style="padding: 1rem; text-align: left;">Роль</th>
-                            <th style="padding: 1rem; text-align: left;">Организатор</th>
-                            <th style="padding: 1rem; text-align: left;">Дата регистрации</th>
-                            <th style="padding: 1rem; text-align: left;">Действия</th>
-                        </tr>
+                            <tr style="border-bottom: 2px solid #667eea;">
+                                <th style="padding: 1rem; text-align: left;">ID</th>
+                                <th style="padding: 1rem; text-align: left;">Имя</th>
+                                <th style="padding: 1rem; text-align: left;">Email</th>
+                                <th style="padding: 1rem; text-align: left;">Роль</th>
+                                <th style="padding: 1rem; text-align: left;">Организатор</th>
+                                <th style="padding: 1rem; text-align: left;">Дата регистрации</th>
+                                <th style="padding: 1rem; text-align: left;">Действия</th>
+                            </tr>
                         </thead>
+
                         <tbody>
                         @foreach($users as $user)
-                            <tr style="border-bottom: 1px solid #eee; {{ $user->id == auth()->id() ? 'background: #f9f9f9;' : '' }}">
+                            <tr style="border-bottom: 1px solid #ffffff; {{ $user->id == auth()->id() ? 'background: #f9f9f9;' : ''}}
+                            {{ $user->id == 1 ? 'background: rgba(255,5,5,0.05); color: red' : ''}}">
                                 <td style="padding: 1rem;">{{ $user->id }}</td>
                                 <td style="padding: 1rem;">
                                     <div style="font-weight: bold;">{{ $user->name }}</div>
@@ -53,40 +57,75 @@
                                 </td>
                                 <td style="padding: 1rem;">{{ $user->email }}</td>
                                 <td style="padding: 1rem;">
-                                    <form method="POST" action="{{ route('admin.users.update-role', $user) }}"
-                                          style="display: inline;" onchange="this.submit()">
-                                        @csrf
-                                        @method('PUT')
-                                        <select name="role"
-                                                style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;
-                                                           background: {{ $user->role == 'admin' ? '#e3f2fd' : '#f1f8e9' }};
-                                                           {{ $user->id == auth()->id() ? 'opacity: 0.7;' : '' }}"
-                                            {{ $user->id == auth()->id() ? 'disabled' : '' }}>
-                                            <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>Пользователь</option>
-                                            <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Администратор</option>
-                                        </select>
-                                    </form>
+
+                                    @if($user->id == auth()->id() || $user->id == 1)
+                                        <div style="display: inline-block; position: relative;">
+                                            <select name="role"
+                                                    style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;
+                                                    cursor: not-allowed; opacity: 0.7;
+                                                    background: {{ $user->role == 'admin' ? '#e3f2fd' : '#f1f8e9' }};" disabled>
+                                                <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>👤 Пользователь</option>
+                                                <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>👑 Администратор</option>
+                                            </select>
+                                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                                                 cursor: not-allowed; background: transparent;">
+                                            </div>
+                                        </div>
+                                    @else
+
+                                        <form method="POST" action="{{ route('admin.users.update-role', $user) }}"
+                                              style="display: inline;">
+                                            @csrf
+                                            @method('PUT')
+                                            <select name="role"
+                                                    style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;
+                                                    cursor: pointer; transition: all 0.3s ease;
+                                                    background: {{ $user->role == 'admin' ? '#e3f2fd' : '#f1f8e9' }};"
+                                                    onchange="this.closest('form').submit()">
+                                                <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>👤 Пользователь</option>
+                                                <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>👑 Администратор</option>
+                                            </select>
+                                        </form>
+                                    @endif
+
                                 </td>
                                 <td style="padding: 1rem;">
                                     <form method="POST" action="{{ route('admin.users.toggle-organizer', $user) }}"
                                           style="display: inline;">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit"
-                                                style="padding: 0.5rem 1rem;
+                                        @if($user->id == auth()->id() || $user->id == 1)
+                                            <button type="submit"
+                                                    style="padding: 0.5rem 1rem;
                                                            background: {{ $user->is_organizer ? '#4CAF50' : '#ff6b6b' }};
-                                                           color: white; border: none; border-radius: 5px; cursor: pointer;
-                                                           {{ $user->id == auth()->id() ? 'opacity: 0.7;' : '' }}"
-                                            {{ $user->id == auth()->id() ? 'disabled' : '' }}>
-                                            {{ $user->is_organizer ? 'Да' : 'Нет' }}
-                                        </button>
+                                                           color: white; border: none; border-radius: 5px; cursor: not-allowed;
+                                                           opacity: 0.7;">
+                                                {{ $user->is_organizer ? 'Да' : 'Нет' }}
+                                            </button>
+
+                                        @else
+                                            <button type="submit"
+                                                    style="padding: 0.5rem 1rem;
+                                                           background: {{ $user->is_organizer ? '#4CAF50' : '#ff6b6b' }};
+                                                           color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                                {{ $user->is_organizer ? 'Да' : 'Нет' }}
+                                            </button>
+                                        @endif
                                     </form>
                                 </td>
                                 <td style="padding: 1rem; color: #666; font-size: 0.9rem;">
                                     {{ $user->created_at->format('d.m.Y H:i') }}
                                 </td>
                                 <td style="padding: 1rem;">
-                                    @if($user->id != auth()->id())
+                                    @if($user->id == auth()->id() || $user->id == 1)
+                                        <button type="button"
+                                                style="padding: 0.5rem 1rem; background: #ff6b6b; color: white;
+                                                border: none; border-radius: 5px; cursor: not-allowed;
+                                                opacity: 0.7;">
+                                            Удалить
+                                        </button>
+
+                                    @else
                                         <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
                                               onsubmit="return confirm('Вы уверены, что хотите удалить пользователя {{ $user->name }}?')"
                                               style="display: inline;">
@@ -94,19 +133,13 @@
                                             @method('DELETE')
                                             <button type="submit"
                                                     style="padding: 0.5rem 1rem; background: #ff6b6b; color: white;
-                                                               border: none; border-radius: 5px; cursor: pointer;">
+                                                    border: none; border-radius: 5px; cursor: pointer;
+                                                    transition: all 0.3s ease;">
                                                 Удалить
                                             </button>
                                         </form>
-                                    @else
-                                        <button type="submit"
-                                                style="padding: 0.5rem 1rem; background: #ff6b6b; color: white;
-                                                               border: none; border-radius: 5px;
-                                                {{ $user->id == auth()->id() ? 'opacity: 0.7;' : '' }}
-                                                {{ $user->id == auth()->id() ? 'disabled' : '' }}">
-                                            Удалить
-                                        </button>
                                     @endif
+
                                 </td>
                             </tr>
                         @endforeach

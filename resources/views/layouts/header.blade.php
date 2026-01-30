@@ -1,33 +1,67 @@
-<header class="header">
+<header class="site-header">
     <nav class="navbar">
-        <div class="logo">
-            <a href="{{ route('home') }}" style="color: white; text-decoration: none;">SportEvents</a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="{{ route('home') }}">Главная</a></li>
-            <li><a href="{{ route('events.index') }}">Мероприятия</a></li>
-            <li><a href="{{ route('support') }}">Поддержка</a></li>
-            @auth
-                @if(auth()->user()->role == 'admin')
-                    <li><a href="{{ route('admin.index') }}">Админ-панель</a></li>
-                @endif
-                @if(auth()->user()->is_organizer)
-                    <li><a href="{{ route('organizer.dashboard') }}">Панель организатора</a></li>
-                @endif
-            @endauth
-        </ul>
-        <div class="auth-buttons">
-            @auth
-                <a href="{{ route('profile') }}" class="btn btn-icon" title="Профиль">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="8" r="5"></circle>
-                        <path d="M20 21a8 8 0 1 0-16 0"></path>
-                    </svg>
-                </a>
-            @else
-                <a href="{{ route('login') }}" class="btn btn-outline">Вход</a>
-                <a href="{{ route('register') }}" class="btn btn-primary">Регистрация</a>
-            @endauth
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ route('home') }}" class="nav-logo">SportEvents</a>
+            </div>
+
+            <button class="nav-toggle" aria-label="Меню">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="nav-content">
+                <ul class="nav-links">
+                    <li>
+                        <a href="{{ route('events.index') }}" class="nav-link {{ request()->routeIs('events.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Мероприятия</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('support') }}" class="nav-link {{ request()->routeIs('support') ? 'active' : '' }}">
+                            <i class="fas fa-headset nav-icon"></i>
+                            <span>Поддержка</span>
+                        </a>
+                    </li>
+                    @auth
+                        @if(auth()->user()->role == 'admin')
+                            <li>
+                                <a href="{{ route('admin.index') }}" class="nav-link nav-link-admin {{ request()->routeIs('admin.*') ? 'active' : '' }}">
+                                    <i class="fas fa-crown nav-icon"></i>
+                                    <span>Админ-панель</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(auth()->user()->is_organizer)
+                            <li>
+                                <a href="{{ route('organizer.dashboard') }}" class="nav-link nav-link-organizer {{ request()->routeIs('organizer.*') ? 'active' : '' }}">
+                                    <i class="fas fa-chart-line nav-icon"></i>
+                                    <span>Организатор</span>
+                                </a>
+                            </li>
+                            @endif
+                    @endauth
+                </ul>
+
+                <div class="nav-auth">
+                    @auth
+                        <a href="{{ route('profile') }}" class="profile-btn" title="Профиль">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" class="auth-btn auth-btn-outline">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Вход</span>
+                        </a>
+                        <a href="{{ route('register') }}" class="auth-btn auth-btn-primary">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Регистрация</span>
+                        </a>
+                    @endauth
+                </div>
+            </div>
         </div>
     </nav>
 </header>

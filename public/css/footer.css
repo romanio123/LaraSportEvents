@@ -145,7 +145,6 @@
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-/* Адаптивность */
 @media (max-width: 992px) {
     .footer-top {
         grid-template-columns: 1fr;
@@ -179,94 +178,3 @@
     }
 }
 
-/* Для страницы профиля (специальный футер) */
-.profile-footer {
-    background: #1a202c;
-    color: white;
-    padding: 4rem 2rem;
-    margin: 1rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.profile-footer .footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 4rem;
-}
-
-.profile-footer .footer-brand h3 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: white;
-}
-
-.profile-footer .footer-tagline {
-    color: #a0aec0;
-    font-size: 1.1rem;
-    line-height: 1.6;
-}
-
-.profile-footer .footer-sections {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3rem;
-}
-
-.profile-footer .footer-section h4 {
-    color: #667eea;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    position: relative;
-    padding-bottom: 0.5rem;
-}
-
-.profile-footer .footer-section h4::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 30px;
-    height: 3px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    border-radius: 2px;
-}
-
-.profile-footer .footer-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.profile-footer .footer-section li {
-    color: #cbd5e0;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-@media (max-width: 1024px) {
-    .profile-footer .footer-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .profile-footer .footer-sections {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .profile-footer .footer-sections {
-        grid-template-columns: 1fr;
-    }
-
-    .profile-footer {
-        margin: 0.5rem;
-        padding: 3rem 1.5rem;
-    }
-}
