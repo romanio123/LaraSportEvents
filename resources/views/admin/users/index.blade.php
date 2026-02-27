@@ -118,11 +118,8 @@
                                 </td>
                                 <td style="padding: 1rem;">
                                     @if($user->id == auth()->id() || $user->id == 1)
-                                        <button type="button"
-                                                style="padding: 0.5rem 1rem; background: #ff6b6b; color: white;
-                                                border: none; border-radius: 5px; cursor: not-allowed;
-                                                opacity: 0.7;">
-                                            Удалить
+                                        <button type="submit" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 6px; font-size: 0.85rem; cursor: not-allowed; transition: all 0.3s ease; opacity: 0.7" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(220, 53, 69, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                            <i class="fas fa-trash"></i>
                                         </button>
 
                                     @else
@@ -131,11 +128,8 @@
                                               style="display: inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                    style="padding: 0.5rem 1rem; background: #ff6b6b; color: white;
-                                                    border: none; border-radius: 5px; cursor: pointer;
-                                                    transition: all 0.3s ease;">
-                                                Удалить
+                                            <button type="submit" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(220, 53, 69, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                                <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
                                     @endif

@@ -36,5 +36,5 @@ class Event extends Model
         return $this->belongsTo(User::class);
     }
 
-    // ... остальные методы остаются без изменений
+
 }

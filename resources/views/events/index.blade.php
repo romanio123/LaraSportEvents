@@ -36,7 +36,7 @@
                             📅 {{ $event['date'] }}<br>
                             📍 {{ $event['city'] }}
                         </div>
-                        <div style="font-size: 1.5rem; font-weight: bold; color: #ff6b6b;">
+                        <div style="font-size: 1.3rem; font-weight: bold; color: #ff6b6b;">
                             {{ $event['price'] }} ₽
                         </div>
                     </div>

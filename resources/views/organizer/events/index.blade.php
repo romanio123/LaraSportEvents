@@ -1,265 +1,87 @@
 @extends('layouts.app')
 
-@section('title', 'Создание мероприятия')
-
-@push('styles')
-    <link href="{{ asset('css/events.css') }}" rel="stylesheet">
-@endpush
-
 @section('content')
-    <div class="container">
-        <div class="create-event-page">
-            <!-- Хлебные крошки -->
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('organizer.dashboard') }}">Панель организатора</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('organizer.events.index') }}">Мои мероприятия</a></li>
-                    <li class="breadcrumb-item active">Создание мероприятия</li>
-                </ol>
-            </nav>
+    <div class="container mt-4">
 
-            <div class="row">
-                <!-- Левая колонка - форма -->
-                <div class="col-lg-8">
-                    <div class="card form-card">
-                        <div class="card-header">
-                            <h2 class="mb-0">Создание нового мероприятия</h2>
-                            <p class="text-muted mb-0">Заполните все необходимые поля</p>
-                        </div>
-                        <div class="card-body">
-                            @if($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        @foreach($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
 
-                            <form action="{{ route('organizer.events.store') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
+        @if(session('success'))
+            <div style="background: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #28a745;">
+                {{ session('success') }}
+                <button type="button" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #155724;" onclick="this.parentElement.style.display='none'">&times;</button>
+            </div>
+        @endif
 
-                                <div class="form-section">
-                                    <h4 class="section-title">Основная информация</h4>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 600; color: #333; margin: 0;">Мои мероприятия</h2>
+            <span style="color: #6c757d;">Всего: {{ $events->count() ?? 0 }}</span>
+        </div>
 
-                                    <div class="row">
-                                        <div class="col-md-12 mb-3">
-                                            <label for="title" class="form-label">Название мероприятия *</label>
-                                            <input type="text" class="form-control" id="title" name="title"
-                                                   value="{{ old('title') }}" required placeholder="Введите название мероприятия">
-                                        </div>
-
-                                        <div class="col-md-12 mb-3">
-                                            <label for="description" class="form-label">Описание *</label>
-                                            <textarea class="form-control" id="description" name="description"
-                                                      rows="4" required placeholder="Опишите ваше мероприятие">{{ old('description') }}</textarea>
-                                        </div>
+        @if(isset($events) && $events->count() > 0)
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                        <tr style="border-bottom: 2px solid #e9ecef;">
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #495057; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Название</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #495057; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Дата</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #495057; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Город</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #495057; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Цена</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #495057; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Участники</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #495057; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Статус</th>
+                            <th style="padding: 1rem; text-align: right; font-weight: 600; color: #495057; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($events as $event)
+                            <tr style="border-bottom: 1px solid #e9ecef; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='transparent'">
+                                <td style="padding: 1rem; font-weight: 500; color: #212529;">{{ $event->title }}</td>
+                                <td style="padding: 1rem; color: #6c757d;">{{ $event->date->format('d.m.Y H:i') }}</td>
+                                <td style="padding: 1rem; color: #6c757d;">{{ $event->city }}</td>
+                                <td style="padding: 1rem; font-weight: 500; color: #28a745;">{{ number_format($event->price, 0, ',', ' ') }} ₽</td>
+                                <td style="padding: 1rem;">
+                                    <span style="font-weight: 500;">{{ $event->current_participants }}/{{ $event->max_participants }}</span>
+                                </td>
+                                <td style="padding: 1rem;">
+                                    @if($event->current_participants < $event->max_participants)
+                                        <span style="display: inline-block; padding: 0.4rem 0.8rem; background: #d4edda; color: #155724; border-radius: 50px; font-size: 0.85rem; font-weight: 500;">✓ Есть места</span>
+                                    @else
+                                        <span style="display: inline-block; padding: 0.4rem 0.8rem; background: #f8d7da; color: #721c24; border-radius: 50px; font-size: 0.85rem; font-weight: 500;">× Заполнено</span>
+                                    @endif
+                                </td>
+                                <td style="padding: 1rem; text-align: right;">
+                                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                        <a href="{{ route('events.show', $event->id) }}" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; transition: all 0.3s ease; border: none;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(102, 126, 234, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                            <i class="fas fa-eye" style="margin-right: 0.25rem;"></i> Просмотр
+                                        </a>
+                                        <a href="{{ route('organizer.events.edit', $event->id) }}" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background: #ffc107; color: #212529; text-decoration: none; border-radius: 6px; font-size: 0.85rem; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(255, 193, 7, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                            <i class="fas fa-edit" style="margin-right: 0.25rem;"></i> Ред.
+                                        </a>
+                                        <form action="{{ route('organizer.events.destroy', $event->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" onclick="return confirm('Удалить мероприятие?')" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(220, 53, 69, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                                <i class="fas fa-trash" style="margin-right: 0.25rem;"></i> Удалить
+                                            </button>
+                                        </form>
                                     </div>
-                                </div>
-
-                                <div class="form-section">
-                                    <h4 class="section-title">Дата и место проведения</h4>
-
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="date" class="form-label">Дата и время *</label>
-                                            <input type="datetime-local" class="form-control" id="date" name="date"
-                                                   value="{{ old('date') }}" required>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="city" class="form-label">Город *</label>
-                                            <select class="form-control" id="city" name="city" required>
-                                                <option value="">Выберите город</option>
-                                                @php
-                                                    $defaultCities = [
-                                                        'Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань',
-                                                        'Нижний Новгород', 'Челябинск', 'Самара', 'Омск', 'Ростов-на-Дону',
-                                                        'Уфа', 'Красноярск', 'Воронеж', 'Пермь', 'Волгоград'
-                                                    ];
-                                                    $cities = $cities ?? $defaultCities;
-                                                @endphp
-
-                                                @foreach($cities as $city)
-                                                    <option value="{{ $city }}" {{ old('city') == $city ? 'selected' : '' }}>
-                                                        {{ $city }}
-                                                    </option>
-                                                @endforeach
-                                                <option value="other">Другой город</option>
-                                            </select>
-                                            <input type="text" class="form-control mt-2" id="otherCity" name="other_city"
-                                                   style="display: none;" placeholder="Введите название города">
-                                        </div>
-
-                                        <div class="col-md-12 mb-3">
-                                            <label for="location" class="form-label">Место проведения *</label>
-                                            <input type="text" class="form-control" id="location" name="location"
-                                                   value="{{ old('location') }}" required placeholder="Адрес или название места">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-section">
-                                    <h4 class="section-title">Детали мероприятия</h4>
-
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="category" class="form-label">Категория *</label>
-                                            <select class="form-control" id="category" name="category" required>
-                                                <option value="">Выберите категорию</option>
-                                                @foreach($categories as $key => $name)
-                                                    <option value="{{ $key }}" {{ old('category') == $key ? 'selected' : '' }}>
-                                                        {{ $name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="max_participants" class="form-label">Макс. участников *</label>
-                                            <input type="number" class="form-control" id="max_participants" name="max_participants"
-                                                   value="{{ old('max_participants', 10) }}" min="1" max="1000" required>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="price" class="form-label">Стоимость участия (₽)</label>
-                                            <input type="number" class="form-control" id="price" name="price"
-                                                   value="{{ old('price', 0) }}" min="0" step="0.01">
-                                            <small class="text-muted">Оставьте 0 для бесплатного мероприятия</small>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="image" class="form-label">Изображение мероприятия</label>
-                                            <input type="file" class="form-control" id="image" name="image"
-                                                   accept="image/*">
-                                            <small class="text-muted">Рекомендуемый размер: 1200×600px</small>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mt-4">
-                                    <button type="submit" class="btn btn-primary btn-lg">
-                                        <i class="fas fa-plus-circle me-2"></i> Создать мероприятие
-                                    </button>
-                                    <a href="{{ route('organizer.events.index') }}" class="btn btn-outline-secondary ms-2">
-                                        Отмена
-                                    </a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+        @else
+            <div style="background: white; padding: 3rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                <div style="margin-bottom: 1.5rem;">
+                    <i class="fas fa-calendar-alt" style="font-size: 4rem; color: #dee2e6;"></i>
+                </div>
+                <h3 style="color: #6c757d; margin-bottom: 1rem; font-weight: 500;">У вас пока нет мероприятий</h3>
+                <p style="color: #adb5bd; margin-bottom: 2rem;">Создайте свое первое мероприятие и привлекайте участников</p>
+                <a href="{{ route('organizer.events.create') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; border: none; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
+                    <i class="fas fa-plus"></i> Создать первое мероприятие
+                </a>
+            </div>
+        @endif
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Обновление предпросмотра при вводе данных
-            const titleInput = document.getElementById('title');
-            const dateInput = document.getElementById('date');
-            const locationInput = document.getElementById('location');
-            const maxParticipantsInput = document.getElementById('max_participants');
-            const priceInput = document.getElementById('price');
-            const previewTitle = document.getElementById('preview-title');
-            const previewDate = document.getElementById('preview-date');
-            const previewLocation = document.getElementById('preview-location');
-            const previewParticipants = document.getElementById('preview-participants');
-            const previewPrice = document.getElementById('preview-price');
-            const citySelect = document.getElementById('city');
-            const otherCityInput = document.getElementById('otherCity');
-
-            // Функция для форматирования даты
-            function formatDateTime(dateTimeStr) {
-                if (!dateTimeStr) return 'Дата не указана';
-                const date = new Date(dateTimeStr);
-                return date.toLocaleDateString('ru-RU', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-            }
-
-            // Функция для форматирования цены
-            function formatPrice(price) {
-                price = parseFloat(price);
-                if (price === 0 || isNaN(price)) return 'Бесплатно';
-                return price.toLocaleString('ru-RU') + ' ₽';
-            }
-
-            // Обновление предпросмотра
-            function updatePreview() {
-                previewTitle.textContent = titleInput.value || 'Название мероприятия';
-
-                if (dateInput.value) {
-                    previewDate.textContent = formatDateTime(dateInput.value);
-                }
-
-                if (locationInput.value) {
-                    previewLocation.textContent = locationInput.value;
-                }
-
-                if (maxParticipantsInput.value) {
-                    previewParticipants.textContent = `Макс: ${maxParticipantsInput.value} участников`;
-                }
-
-                previewPrice.textContent = formatPrice(priceInput.value);
-            }
-
-            // Показать/скрыть поле для другого города
-            citySelect.addEventListener('change', function() {
-                if (this.value === 'other') {
-                    otherCityInput.style.display = 'block';
-                    otherCityInput.required = true;
-                } else {
-                    otherCityInput.style.display = 'none';
-                    otherCityInput.required = false;
-                }
-            });
-
-            // Слушатели событий для обновления предпросмотра
-            [titleInput, dateInput, locationInput, maxParticipantsInput, priceInput].forEach(input => {
-                input.addEventListener('input', updatePreview);
-                input.addEventListener('change', updatePreview);
-            });
-
-            // Инициализация предпросмотра
-            updatePreview();
-
-            // Валидация даты (нельзя выбрать прошедшую дату)
-            const today = new Date().toISOString().slice(0, 16);
-            dateInput.min = today;
-
-            // Валидация формы
-            const form = document.querySelector('form');
-            form.addEventListener('submit', function(e) {
-                let valid = true;
-
-                // Проверка даты
-                if (dateInput.value && new Date(dateInput.value) < new Date()) {
-                    alert('Нельзя выбрать прошедшую дату');
-                    valid = false;
-                }
-
-                // Проверка максимального количества участников
-                if (parseInt(maxParticipantsInput.value) < 1) {
-                    alert('Минимальное количество участников: 1');
-                    valid = false;
-                }
-
-                if (!valid) {
-                    e.preventDefault();
-                }
-            });
-        });
-    </script>
-@endpush
-
-<style>
-
-</style>

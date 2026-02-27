@@ -44,9 +44,4 @@
         </div>
     </div>
 
-    <div style="margin-top: 3rem; text-align: center;">
-        <a href="/events" style="display: inline-block; padding: 1rem 2rem; background: #667eea; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
-            ← Все мероприятия
-        </a>
-    </div>
 @endsection
