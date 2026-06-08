@@ -10,10 +10,13 @@ body {
     background: #f8f9fa;
     color: #333;
     line-height: 1.6;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -56,6 +59,34 @@ body {
     padding: 2rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     margin-bottom: 1.5rem;
+}
+
+/* Общие стили для таблиц в админке */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    text-align: left;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #eee;
+}
+
+.admin-table tr:hover td {
+    background: #f8f9fa;
 }
 
 .main-content {

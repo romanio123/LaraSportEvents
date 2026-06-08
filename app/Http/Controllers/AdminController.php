@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Models\SupportTicket;
 
 class AdminController extends Controller
 {
@@ -14,6 +15,7 @@ class AdminController extends Controller
         $eventsCount = Event::count();
         $adminsCount = User::where('role', 'admin')->count();
         $organizersCount = User::where('is_organizer', true)->count();
+        $newTicketsCount = SupportTicket::where('status', 'open')->count();
 
         $recentUsers = User::latest()->take(5)->get();
 
@@ -22,7 +24,8 @@ class AdminController extends Controller
             'eventsCount',
             'adminsCount',
             'organizersCount',
-            'recentUsers'
+            'recentUsers',
+            'newTicketsCount'
         ));
     }
 
@@ -30,5 +33,20 @@ class AdminController extends Controller
     {
         $events = Event::latest()->paginate(10);
         return view('admin.events.index', compact('events'));
+    }
+
+    public function support()
+    {
+        return view('helper.index');
+    }
+
+    public function allEvents()
+    {
+        try {
+            $events = \App\Models\Event::with('user')->latest()->paginate(15);
+            return view('admin.events.all', compact('events'));
+        } catch (\Exception $e) {
+            return redirect()->route('admin.index')->with('error');
+        }
     }
 }

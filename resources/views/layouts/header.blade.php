@@ -28,10 +28,11 @@
                             <li>
                                 <a href="{{ route('admin.index') }}" class="nav-link nav-link-admin {{ request()->routeIs('admin.*') ? 'active' : '' }}">
                                     <i class="fas fa-crown nav-icon"></i>
-                                    <span>Админ-панель</span>
+                                    <span>Админка</span>
                                 </a>
                             </li>
                         @endif
+           
                         @if(auth()->user()->is_organizer)
                             <li>
                                 <a href="{{ route('organizer.dashboard') }}" class="nav-link nav-link-organizer {{ request()->routeIs('organizer.*') ? 'active' : '' }}">
@@ -45,10 +46,14 @@
 
                 <div class="nav-auth">
                     @auth
-                        <a href="{{ route('profile') }}" class="profile-btn" title="Профиль">
-                            <div class="profile-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
+                        <a href="{{ route('profile') }}" class="profile-icon-btn" title="Профиль">
+                            @if(Auth::user()->avatar && Storage::disk('public')->exists(Auth::user()->avatar))
+                                <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="profile-icon-img">
+                            @else
+                                <div class="profile-icon-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            @endif
                         </a>
                     @else
                         <a href="{{ route('login') }}" class="auth-btn auth-btn-outline">

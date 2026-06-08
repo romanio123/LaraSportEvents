@@ -30,8 +30,8 @@
                         @else
                             <li><a href="{{ route('register') }}">Стать организатором</a></li>
                         @endauth
-                        <li><a href="#">Тарифы</a></li>
-                        <li><a href="#">Документация</a></li>
+                        <li><a href="{{ route('tariffs') }}">Тарифы</a></li>
+                        <li><a href="{{ route('documentation') }}">Документация</a></li>
                         <li><a href="{{ route('support') }}">Поддержка</a></li>
                     </ul>
                 </div>

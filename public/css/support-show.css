@@ -1,0 +1,219 @@
+.support-ticket-page {
+    padding: 2rem 0;
+    min-height: calc(100vh - 80px);
+    background: #f8f9fa;
+}
+
+.ticket-container {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.ticket-header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.ticket-subject {
+    opacity: 0.9;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.ticket-status-badge {
+    padding: 0.4rem 1rem;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: white;
+}
+
+.status-open {
+    color: #dc2626;
+}
+
+.status-in_progress {
+    color: #d97706;
+}
+
+.status-closed {
+    color: #64748b;
+}
+
+.message-first {
+    padding: 0 2rem;
+}
+
+.message {
+    margin: 1rem 2rem;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+}
+
+.message.user {
+    background: #f1f5f9;
+    margin-left: 4rem;
+}
+
+.message.admin {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-left: 4px solid #667eea;
+    margin-right: 4rem;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.message-body p {
+    margin: 0;
+    color: #1e293b;
+    line-height: 1.5;
+}
+
+.messages-container {
+    padding: 0 2rem;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.reply-form {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+    margin-top: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    resize: vertical;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn-reply {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-reply:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.nav-links {
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 1.2rem;
+    background: #e2e8f0;
+    color: #475569;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background: #cbd5e0;
+}
+
+.btn-close-ticket {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 1.2rem;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-close-ticket:hover {
+    background: #059669;
+    transform: translateY(-2px);
+}
+
+.closed-info {
+    padding: 2rem;
+    text-align: center;
+    background: #f1f5f9;
+    margin: 1rem 2rem;
+    border-radius: 12px;
+    color: #64748b;
+}
+
+.closed-info i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .ticket-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .message.user {
+        margin-left: 0;
+    }
+    
+    .message.admin {
+        margin-right: 0;
+    }
+    
+    .nav-links {
+        flex-direction: column;
+    }
+}

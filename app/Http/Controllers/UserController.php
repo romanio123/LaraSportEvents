@@ -19,7 +19,6 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Проверка прав доступа через Gate
         if (!Gate::allows('view', $user)) {
             abort(403, 'У вас нет прав для просмотра этого профиля');
         }
@@ -30,10 +29,10 @@ class UserController extends Controller
     /**
      * Показать форму редактирования профиля
      */
-    public function edit()
+     public function edit()
     {
         $user = Auth::user();
-        return view('users.edit', compact('user'));
+        return view('user.edit', compact('user'));
     }
 
     /**
@@ -71,22 +70,17 @@ class UserController extends Controller
     /**
      * Удалить аккаунт пользователя
      */
-    public function destroy(Request $request)
-    {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
+    public function destroy()
+{
+    $user = Auth::user();
+    
+    if ($user) {
         Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
         $user->delete();
-
-        return redirect('/')->with('success', 'Ваш аккаунт был удален.');
     }
+    
+    return redirect()->route('home')->with('success', 'Аккаунт удален');
+}
 
     /**
      * Показать список пользователей (для админа)

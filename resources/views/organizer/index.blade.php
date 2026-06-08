@@ -3,15 +3,13 @@
 @section('content')
     <div class="container mt-4">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 style="font-size: 2rem; font-weight: 600; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">
-                Панель организатора
-            </h1>
-            <a href="{{ route('organizer.events.create') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; border: none; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
-                <i class="fas fa-plus"></i> Создать мероприятие
-            </a>
+        <div class="d-flex justify-content-center align-items-center mb-4">
+            <div class="events-header mb-4">
+                <h1 class="events-title">Панель организатора</h1>
+                <p class="events-subtitle">Создавайте мероприятия, управляйте участниками и отслеживайте статистику</p>
+            </div>
         </div>
- 
+
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
             <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                 <div style="display: flex; align-items: center; gap: 1rem;">
@@ -25,17 +23,6 @@
                 </div>
             </div>
 
-            <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-arrow-up" style="color: white; font-size: 1.5rem;"></i>
-                    </div>
-                    <div>
-                        <div style="font-size: 2rem; font-weight: 600;">{{ $upcomingEvents ?? 0 }}</div>
-                        <div style="color: #6c757d;">Предстоящих</div>
-                    </div>
-                </div>
-            </div>
 
             <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                 <div style="display: flex; align-items: center; gap: 1rem;">
@@ -50,6 +37,43 @@
             </div>
         </div>
 
+         <div class="quick-actions-card">
+                <div class="quick-actions-header">
+                    <h3 class="quick-actions-title">
+                        <i class="fas fa-bolt me-2"></i>
+                        Быстрые действия
+                    </h3>
+                    <p class="quick-actions-subtitle">Основные операции для управления платформой</p>
+                </div>
+                <div class="quick-actions-grid">
+                    <a href="{{ route('organizer.events.create') }}" class="quick-action-item">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Управление мероприятиями</h4>
+                            <p>Добавление</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+
+                    <a href="{{ route('organizer.events.index') }}" class="quick-action-item">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <h4>Мои мероприятия</h4>
+                            <p>Просмотр и управление событиями</p>
+                        </div>
+                        <div class="quick-action-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 style="font-size: 1.5rem; font-weight: 600; color: #333; margin: 0;">Последние мероприятия</h2>
             <div style="display: flex; gap: 1rem; align-items: center;">
@@ -59,7 +83,6 @@
             </div>
         </div>
 
-        {{-- Сообщения об успехе --}}
         @if(session('success'))
             <div style="background: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #28a745;">
                 {{ session('success') }}
@@ -67,7 +90,6 @@
             </div>
         @endif
 
-        {{-- Таблица с последними 5 мероприятиями --}}
         @if($events->count() > 0)
             <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;">
                 <div style="overflow-x: auto;">
@@ -127,5 +149,7 @@
                 </a>
             </div>
         @endif
+
     </div>
+</div>
 @endsection

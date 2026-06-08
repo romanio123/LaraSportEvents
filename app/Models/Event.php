@@ -19,6 +19,7 @@ class Event extends Model
         'max_participants',
         'current_participants',
         'category',
+        'category_id',
         'image',
         'user_id',
     ];
@@ -36,5 +37,54 @@ class Event extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Связь с категорией
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
+    /**
+     * Связь с регистрациями
+     */
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
+
+    /**
+     * Пользователи, зарегистрированные на мероприятие
+     */
+    public function registeredUsers()
+    {
+        return $this->belongsToMany(User::class, 'registrations');
+    }
+
+    /**
+     * Проверка, есть ли свободные места
+     */
+    public function hasAvailableSlots(): bool
+    {
+        return $this->current_participants < $this->max_participants;
+    }
+
+    /**
+     * Количество свободных мест
+     */
+    public function availableSlots(): int
+    {
+        return $this->max_participants - $this->current_participants;
+    }
+
+    /**
+     * Процент заполненности
+     */
+    public function getFillPercentageAttribute(): float
+    {
+        if ($this->max_participants == 0) {
+            return 0;
+        }
+        return ($this->current_participants / $this->max_participants) * 100;
+    }
 }

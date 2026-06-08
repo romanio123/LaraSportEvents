@@ -11,6 +11,17 @@
     <link href="{{ asset('css/header.css') }}" rel="stylesheet">
     <link href="{{ asset('css/footer.css') }}" rel="stylesheet">
     <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/events.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/home.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/help.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/auth.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/support.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/support-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/support-show.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/organizer.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin-tables.css') }}" rel="stylesheet">
     <title>SportEvents</title>
 
 </head>
@@ -20,6 +31,7 @@
 <main class="container">
     @yield('content')
 </main>
+
 
 @include('layouts.footer')
 </body>

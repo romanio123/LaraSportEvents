@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'role',
         'is_organizer',
+        'avatar'
     ];
 
     /**
@@ -109,4 +110,15 @@ class User extends Authenticatable
     {
         return $query->where('role', 'user')->where('is_organizer', false);
     }
+
+        public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
+
+    public function registeredEvents()
+    {
+        return $this->belongsToMany(Event::class, 'registrations');
+    }
+
 }
