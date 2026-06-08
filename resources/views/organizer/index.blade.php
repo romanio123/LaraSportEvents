@@ -10,31 +10,27 @@
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-            <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-calendar-alt" style="color: white; font-size: 1.5rem;"></i>
-                    </div>
-                    <div>
-                        <div style="font-size: 2rem; font-weight: 600;">{{ $totalEvents ?? 0 }}</div>
-                        <div style="color: #6c757d;">Всего мероприятий</div>
-                    </div>
-                </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <i class="fas fa-calendar-alt"></i>
             </div>
+            <div class="stat-info">
+                <div class="stat-number">{{ $totalEvents ?? 0 }}</div>
+                <div class="stat-label">Всего мероприятий</div>
+            </div>
+        </div>
 
 
-            <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-users" style="color: white; font-size: 1.5rem;"></i>
-                    </div>
-                    <div>
-                        <div style="font-size: 2rem; font-weight: 600;">{{ $totalParticipants ?? 0 }}</div>
-                        <div style="color: #6c757d;">Всего участников</div>
-                    </div>
-                </div>
+            <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);">
+                <i class="fas fa-users"></i>
             </div>
+            <div class="stat-info">
+                <div class="stat-number">{{ $totalParticipants ?? 0 }}</div>
+                <div class="stat-label">Всего участников</div>
+            </div>
+        </div>
         </div>
 
          <div class="quick-actions-card">
