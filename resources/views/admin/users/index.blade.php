@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @push('styles')
-<link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
     <link href="{{ asset('css/admin-tables.css') }}" rel="stylesheet">
 @endpush
 
@@ -23,9 +23,30 @@
     <div class="table-container">
         <div class="table-header">
             <h3><i class="fas fa-users me-2"></i>Все пользователи</h3>
-            <div class="table-info">
-                <i class="fas fa-info-circle"></i>
-                Всего пользователей: {{ $users->total() }}
+            <div class="table-controls">
+                <!-- ПОИСК -->
+                <div class="search-wrapper">
+                    <form method="GET" action="{{ route('admin.users.index') }}" class="search-form">
+                        <div class="search-input-group">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" 
+                                   name="search" 
+                                   class="search-input" 
+                                   placeholder="Поиск по имени или email..." 
+                                   value="{{ request('search') }}">
+                            @if(request('search'))
+                                <a href="{{ route('admin.users.index') }}" class="search-clear" title="Очистить">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            @endif
+                        </div>
+                        <button type="submit" class="search-btn">Найти</button>
+                    </form>
+                </div>
+                <div class="table-info">
+                    <i class="fas fa-info-circle"></i>
+                    Найдено: {{ $users->total() }} пользователей
+                </div>
             </div>
         </div>
 
@@ -34,8 +55,17 @@
                 <div class="empty-icon">
                     <i class="fas fa-user-slash"></i>
                 </div>
-                <h3>Пользователей нет</h3>
-                <p>В системе пока нет зарегистрированных пользователей</p>
+                @if(request('search'))
+                    <h3>Ничего не найдено</h3>
+                    <p>Пользователей с именем или email "{{ request('search') }}" не найдено</p>
+                    <a href="{{ route('admin.users.index') }}" class="btn-back" style="display: inline-flex; margin-top: 1rem;">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Вернуться к списку
+                    </a>
+                @else
+                    <h3>Пользователей нет</h3>
+                    <p>В системе пока нет зарегистрированных пользователей</p>
+                @endif
             </div>
         @else
             <div class="table-responsive">

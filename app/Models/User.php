@@ -5,41 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
         'is_organizer',
-        'avatar'
+        'avatar',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -74,51 +58,42 @@ class User extends Authenticatable
     }
 
     /**
-     * События модели
+     * Связь с мероприятиями (как организатор)
      */
-    protected static function boot()
+    public function events()
     {
-        parent::boot();
-
-        static::creating(function ($user) {
-            if (empty($user->role)) {
-                $user->role = 'user';
-            }
-        });
+        return $this->hasMany(Event::class, 'user_id');
     }
 
     /**
-     * Scope для администраторов
+     * Связь с регистрациями
      */
-    public function scopeAdmins($query)
-    {
-        return $query->where('role', 'admin');
-    }
-
-    /**
-     * Scope для организаторов
-     */
-    public function scopeOrganizers($query)
-    {
-        return $query->where('is_organizer', true);
-    }
-
-    /**
-     * Scope для обычных пользователей
-     */
-    public function scopeRegular($query)
-    {
-        return $query->where('role', 'user')->where('is_organizer', false);
-    }
-
-        public function registrations()
+    public function registrations()
     {
         return $this->hasMany(Registration::class);
     }
 
+    /**
+     * Мероприятия, на которые зарегистрирован пользователь
+     */
     public function registeredEvents()
     {
         return $this->belongsToMany(Event::class, 'registrations');
     }
 
+    /**
+     * Связь с обращениями в поддержку
+     */
+    public function supportTickets()
+    {
+        return $this->hasMany(SupportTicket::class);
+    }
+
+    /**
+     * Связь с сообщениями поддержки
+     */
+    public function supportMessages()
+    {
+        return $this->hasMany(SupportMessage::class);
+    }
 }

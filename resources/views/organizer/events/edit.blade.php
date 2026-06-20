@@ -2,27 +2,29 @@
 
 @push('styles')
     <link href="{{ asset('css/events.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/edit-organizer.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
 <div class="create-event-page">
-    <div class="container"> 
+    <div class="container">
         <!-- Заголовок -->
         <div class="page-header">
             <div>
                 <h1 class="page-title">
-                    <i class="fas fa-plus-circle me-3"></i>
-                    Создание мероприятия
+                    <i class="fas fa-edit me-3"></i>
+                    Редактирование мероприятия
                 </h1>
-                <p class="page-subtitle">Заполните информацию о новом спортивном событии</p>
+                <p class="page-subtitle">Измените информацию о спортивном событии</p>
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-8">
                 <div class="form-card">
-                    <form action="{{ route('organizer.events.store') }}" method="POST" enctype="multipart/form-data" id="createEventForm">
+                    <form action="{{ route('organizer.events.update', $event->id) }}" method="POST" enctype="multipart/form-data" id="editEventForm">
                         @csrf
+                        @method('PUT')
 
                         <!-- Основная информация -->
                         <div class="form-section">
@@ -32,7 +34,7 @@
                                 </div>
                                 <div>
                                     <h4 class="section-title">Основная информация</h4>
-                                    <p class="section-desc">Расскажите о мероприятии в деталях</p>
+                                    <p class="section-desc">Обновите информацию о мероприятии</p>
                                 </div>
                             </div>
 
@@ -45,7 +47,7 @@
                                        class="form-control @error('title') is-invalid @enderror"
                                        id="title"
                                        name="title"
-                                       value="{{ old('title') }}"
+                                       value="{{ old('title', $event->title) }}"
                                        required
                                        placeholder="Введите название мероприятия">
                                 @error('title')
@@ -63,13 +65,13 @@
                                           name="description"
                                           rows="6"
                                           required
-                                          placeholder="Опишите программу мероприятия, что будет интересного, что нужно взять с собой...">{{ old('description') }}</textarea>
+                                          placeholder="Опишите программу мероприятия...">{{ old('description', $event->description) }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                                 <small class="form-hint">
                                     <i class="fas fa-lightbulb"></i>
-                                    Минимум 10 символов. Чем подробнее описание, тем больше участников заинтересуются
+                                    Минимум 10 символов. Подробное описание привлекает больше участников
                                 </small>
                             </div>
                         </div>
@@ -97,7 +99,7 @@
                                                class="form-control @error('date') is-invalid @enderror"
                                                id="date"
                                                name="date"
-                                               value="{{ old('date') }}"
+                                               value="{{ old('date', $event->date ? $event->date->format('Y-m-d\TH:i') : '') }}"
                                                required>
                                         @error('date')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -125,7 +127,7 @@
                                                 $cities = $cities ?? $defaultCities;
                                             @endphp
                                             @foreach($cities as $city)
-                                                <option value="{{ $city }}" {{ old('city') == $city ? 'selected' : '' }}>
+                                                <option value="{{ $city }}" {{ old('city', $event->city) == $city ? 'selected' : '' }}>
                                                     {{ $city }}
                                                 </option>
                                             @endforeach
@@ -157,7 +159,7 @@
                                        class="form-control @error('location') is-invalid @enderror"
                                        id="location"
                                        name="location"
-                                       value="{{ old('location') }}"
+                                       value="{{ old('location', $event->location) }}"
                                        required
                                        placeholder="Адрес или название места">
                                 @error('location')
@@ -195,7 +197,7 @@
                                                 required>
                                             <option value="">Выберите категорию</option>
                                             @foreach($categories as $key => $name)
-                                                <option value="{{ $key }}" {{ old('category') == $key ? 'selected' : '' }}>
+                                                <option value="{{ $key }}" {{ old('category', $event->category) == $name ? 'selected' : '' }}>
                                                     {{ $name }}
                                                 </option>
                                             @endforeach
@@ -215,14 +217,17 @@
                                                class="form-control @error('max_participants') is-invalid @enderror"
                                                id="max_participants"
                                                name="max_participants"
-                                               value="{{ old('max_participants', 10) }}"
-                                               min="1"
+                                               value="{{ old('max_participants', $event->max_participants) }}"
+                                               min="{{ $event->current_participants }}"
                                                max="1000"
                                                required>
                                         @error('max_participants')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        <small class="form-hint">От 1 до 1000 человек</small>
+                                        <small class="form-hint">
+                                            <i class="fas fa-info-circle"></i>
+                                            Минимум: {{ $event->current_participants }} (уже зарегистрированных участников)
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -240,9 +245,10 @@
                                                    class="form-control @error('price') is-invalid @enderror"
                                                    id="price"
                                                    name="price"
-                                                   value="{{ old('price', 0) }}"
+                                                   value="{{ old('price', $event->price) }}"
                                                    min="0"
-                                                   step="10">
+                                                   step="10"
+                                                   style="color: #10b981; font-weight: 600;">
                                         </div>
                                         @error('price')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -256,9 +262,15 @@
                                             <i class="fas fa-image"></i>
                                             Изображение
                                         </label>
+                                        @if($event->image && Storage::disk('public')->exists($event->image))
+                                            <div class="current-image">
+                                                <img src="{{ Storage::url($event->image) }}" alt="{{ $event->title }}">
+                                                <span class="image-label">Текущее изображение</span>
+                                            </div>
+                                        @endif
                                         <div class="image-upload-area" onclick="document.getElementById('image').click()">
                                             <i class="fas fa-cloud-upload-alt"></i>
-                                            <p>Нажмите для загрузки изображения</p>
+                                            <p>Нажмите для загрузки нового изображения</p>
                                             <span>PNG, JPG до 2MB</span>
                                         </div>
                                         <input type="file"
@@ -276,6 +288,7 @@
                                         @error('image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+                                        <small class="form-hint">Оставьте пустым, если не хотите менять изображение</small>
                                     </div>
                                 </div>
                             </div>
@@ -288,8 +301,8 @@
                                 Отмена
                             </a>
                             <button type="submit" class="btn-submit" id="submitBtn">
-                                <i class="fas fa-check-circle me-2"></i>
-                                Создать мероприятие
+                                <i class="fas fa-save me-2"></i>
+                                Сохранить изменения
                             </button>
                         </div>
                     </form>
@@ -300,15 +313,40 @@
                 <div class="info-sidebar">
                     <div class="info-card">
                         <div class="info-card-header">
+                            <i class="fas fa-info-circle"></i>
+                            <h4>Информация о мероприятии</h4>
+                        </div>
+                        <div class="stats-preview">
+                            <div class="stat-item">
+                                <span class="stat-label">Создано:</span>
+                                <span class="stat-value">{{ $event->created_at->format('d.m.Y H:i') }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Участников:</span>
+                                <span class="stat-value">{{ $event->current_participants }} / {{ $event->max_participants }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Статус:</span>
+                                <span class="stat-value">
+                                    @if($event->hasAvailableSlots())
+                                        <span style="color: #10b981;">Есть места</span>
+                                    @else
+                                        <span style="color: #ef4444;">Заполнено</span>
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-header">
                             <i class="fas fa-lightbulb"></i>
-                            <h4>Советы по созданию</h4>
+                            <h4>Советы</h4>
                         </div>
                         <ul class="tips-list">
-                            <li><i class="fas fa-check-circle"></i> Используйте яркое и запоминающееся название</li>
-                            <li><i class="fas fa-check-circle"></i> Подробно опишите программу мероприятия</li>
-                            <li><i class="fas fa-check-circle"></i> Укажите точное место проведения</li>
-                            <li><i class="fas fa-check-circle"></i> Добавьте качественное изображение</li>
-                            <li><i class="fas fa-check-circle"></i> Проверьте правильность даты и времени</li>
+                            <li><i class="fas fa-check-circle"></i> Обновите информацию, если изменились дата или место</li>
+                            <li><i class="fas fa-check-circle"></i> Проверьте лимит участников</li>
+                            <li><i class="fas fa-check-circle"></i> Добавьте новое изображение для привлечения внимания</li>
                         </ul>
                     </div>
                 </div>
@@ -316,6 +354,10 @@
         </div>
     </div>
 </div>
+
+<style>
+
+</style>
 
 <script>
 // Показ/скрытие поля "Другой город"
@@ -341,6 +383,11 @@ document.getElementById('image').addEventListener('change', function(e) {
             img.src = event.target.result;
             preview.style.display = 'block';
             document.querySelector('.image-upload-area').style.display = 'none';
+            // Скрываем текущее изображение если есть
+            const currentImage = document.querySelector('.current-image');
+            if (currentImage) {
+                currentImage.style.display = 'none';
+            }
         };
         reader.readAsDataURL(file);
     }
@@ -350,11 +397,10 @@ function clearImage() {
     document.getElementById('image').value = '';
     document.getElementById('imagePreview').style.display = 'none';
     document.querySelector('.image-upload-area').style.display = 'block';
+    const currentImage = document.querySelector('.current-image');
+    if (currentImage) {
+        currentImage.style.display = 'block';
+    }
 }
-
-// Валидация даты
-const dateInput = document.getElementById('date');
-const today = new Date().toISOString().slice(0, 16);
-dateInput.min = today;
 </script>
 @endsection

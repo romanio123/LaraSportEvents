@@ -10,13 +10,13 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        // Добавляем только кастомные middleware
+    ->withMiddleware(function (Middleware $middleware) {
+        // Регистрация middleware
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'organizer' => \App\Http\Middleware\OrganizerMiddleware::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

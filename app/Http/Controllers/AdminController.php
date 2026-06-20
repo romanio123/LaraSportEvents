@@ -35,11 +35,6 @@ class AdminController extends Controller
         return view('admin.events.index', compact('events'));
     }
 
-    public function support()
-    {
-        return view('helper.index');
-    }
-
     public function allEvents()
     {
         try {
@@ -50,3 +45,5 @@ class AdminController extends Controller
         }
     }
 }
+
+

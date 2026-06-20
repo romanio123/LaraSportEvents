@@ -1,14 +1,14 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrganizerController;
-use App\Http\Controllers\SupportController; 
+use App\Http\Controllers\SupportController;
+use Illuminate\Support\Facades\Route;
 
 // Главная
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -26,16 +26,15 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-// Защищенные маршруты 
+// Защищенные маршруты
 Route::middleware('auth')->group(function () {
     // Выход
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');  
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Профиль
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
-    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');                                                        
-    // Аватар
+    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     // Управление профилем
@@ -45,7 +44,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/delete', [UserController::class, 'destroy'])->name('destroy');
     });
 
-    // Панель организатора (только для организаторов)
+    // Панель организатора
     Route::middleware('organizer')->prefix('organizer')->name('organizer.')->group(function () {
         Route::get('/dashboard', [OrganizerController::class, 'index'])->name('dashboard');
         Route::get('/events', [OrganizerController::class, 'events'])->name('events.index');
@@ -60,19 +59,18 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::post('/event/{id}/register', [EventController::class, 'register'])->name('event.register');
-    
-    // ПОДДЕРЖКА (только для авторизованных)
+
+    // Поддержка
     Route::get('/support', [SupportController::class, 'index'])->name('support');
     Route::post('/support', [SupportController::class, 'store'])->name('support.store');
     Route::get('/support/{ticket}', [SupportController::class, 'show'])->name('support.show');
     Route::post('/support/{ticket}/message', [SupportController::class, 'message'])->name('support.message');
 
-    // Админ-панель (только для администраторов)
+    // Админ-панель
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::get('/events', [AdminController::class, 'events'])->name('events');
         Route::get('/events/all', [AdminController::class, 'allEvents'])->name('events.all');
-        Route::get('/helper', [AdminController::class, 'helpers'])->name('index');
 
         // Управление пользователями
         Route::prefix('users')->name('users.')->group(function () {
@@ -81,7 +79,7 @@ Route::middleware('auth')->group(function () {
             Route::put('/{user}/toggle-organizer', [UserController::class, 'toggleOrganizer'])->name('toggle-organizer');
             Route::delete('/{user}', [UserController::class, 'adminDestroy'])->name('destroy');
         });
-        
+
         // Поддержка для админа
         Route::get('/support', [SupportController::class, 'adminIndex'])->name('support');
         Route::post('/support/{ticket}/close', [SupportController::class, 'close'])->name('support.close');

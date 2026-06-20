@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/UserController.php
 
 namespace App\Http\Controllers;
 
@@ -7,29 +6,45 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
     /**
-     * Показать профиль пользователя
+     * Список пользователей (для админа)
      */
-    public function show($id)
+    public function index(Request $request)
     {
-        $user = User::findOrFail($id);
-
-        if (!Gate::allows('view', $user)) {
-            abort(403, 'У вас нет прав для просмотра этого профиля');
+        // Проверка прав
+        if (!Gate::allows('viewAny', User::class)) {
+            abort(403, 'У вас нет прав для просмотра списка пользователей');
         }
 
-        return view('users.show', compact('user'));
+        $query = User::query();
+        
+        // Поиск по имени или email
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+        
+        // Сортируем по дате регистрации (сначала новые)
+        $users = $query->orderBy('created_at', 'desc')->paginate(15);
+        
+        // Сохраняем параметры поиска в пагинации
+        $users->appends(['search' => $request->search]);
+        
+        return view('admin.users.index', compact('users'));
     }
 
     /**
      * Показать форму редактирования профиля
      */
-     public function edit()
+    public function edit()
     {
         $user = Auth::user();
         return view('user.edit', compact('user'));
@@ -71,29 +86,15 @@ class UserController extends Controller
      * Удалить аккаунт пользователя
      */
     public function destroy()
-{
-    $user = Auth::user();
-    
-    if ($user) {
-        Auth::logout();
-        $user->delete();
-    }
-    
-    return redirect()->route('home')->with('success', 'Аккаунт удален');
-}
-
-    /**
-     * Показать список пользователей (для админа)
-     */
-    public function index()
     {
-        // Проверка через Gate
-        if (!Gate::allows('viewAny', User::class)) {
-            abort(403, 'У вас нет прав для просмотра списка пользователей');
+        $user = Auth::user();
+        
+        if ($user) {
+            Auth::logout();
+            $user->delete();
         }
-
-        $users = User::latest()->paginate(10);
-        return view('admin.users.index', compact('users'));
+        
+        return redirect()->route('home')->with('success', 'Аккаунт удален');
     }
 
     /**
