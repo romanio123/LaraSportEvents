@@ -13,44 +13,56 @@ class RegistrationsTableSeeder extends Seeder
     {
         $users = User::where('role', 'user')
             ->where('is_organizer', false)
-            ->get();
+            ->pluck('id'); // Только ID, а не все модели
         
         $events = Event::all();
         
-        $registrationsCount = 0;
+        if ($events->isEmpty() || $users->isEmpty()) {
+            $this->command->warn('Нет мероприятий или пользователей');
+            return;
+        }
+        
+        $registrationsData = [];
+        $updateData = [];
         
         foreach ($events as $event) {
-            $targetParticipants = rand(
+            // Выбираем случайное количество участников
+            $targetCount = rand(
                 round($event->max_participants * 0.3),
                 round($event->max_participants * 0.8)
             );
+            $targetCount = min($targetCount, $users->count());
             
-            $targetParticipants = min($targetParticipants, $users->count());
-            
-            $selectedUsers = $users->random($targetParticipants);
+            // Берём случайных пользователей
+            $selectedUsers = $users->random($targetCount);
             
             $registeredCount = 0;
-            foreach ($selectedUsers as $user) {
-                $exists = Registration::where('user_id', $user->id)
-                    ->where('event_id', $event->id)
-                    ->exists();
-                
-                if (!$exists) {
-                    Registration::create([
-                        'user_id' => $user->id,
-                        'event_id' => $event->id,
-                        'status' => 'confirmed',
-                        'created_at' => now()->subDays(rand(1, 30)),
-                        'updated_at' => now(),
-                    ]);
-                    $registeredCount++;
-                    $registrationsCount++;
-                }
+            foreach ($selectedUsers as $userId) {
+                // Добавляем данные для массовой вставки
+                $registrationsData[] = [
+                    'user_id' => $userId,
+                    'event_id' => $event->id,
+                    'status' => 'confirmed',
+                    'created_at' => now()->subDays(rand(1, 30)),
+                    'updated_at' => now(),
+                ];
+                $registeredCount++;
             }
             
-            $event->update([
-                'current_participants' => $registeredCount
-            ]);
+            // Сохраняем для обновления мероприятий
+            $updateData[$event->id] = $registeredCount;
         }
+        
+        // Массовая вставка регистраций (ОДИН запрос!)
+        if (!empty($registrationsData)) {
+            Registration::insert($registrationsData);
+        }
+        
+        // Массовое обновление мероприятий
+        foreach ($updateData as $eventId => $count) {
+            Event::where('id', $eventId)->update(['current_participants' => $count]);
+        }
+        
+        $this->command->info('Создано ' . count($registrationsData) . ' регистраций');
     }
 }

@@ -25,7 +25,6 @@ class EventsTableSeeder extends Seeder
             'Саратов', 'Тюмень', 'Тольятти', 'Ижевск'
         ];
         
-        // Маппинг категорий на имена файлов
         $categoryImages = [
             'Футбол' => 'football.jpg',
             'Баскетбол' => 'basketball.jpg',
@@ -45,10 +44,6 @@ class EventsTableSeeder extends Seeder
             'Хоккей' => 'hockey.jpg',
             'Другое' => 'more.jpg'
         ];
-        
-        // Проверка и вывод информации о папке
-        $this->command->info('Проверка папки с изображениями...');
-        $this->command->info('Путь: ' . storage_path('app/public/events'));
         
         if (!Storage::disk('public')->exists('events')) {
             $this->command->error('Папка events не существует! Создайте её: storage/app/public/events');
@@ -126,7 +121,6 @@ class EventsTableSeeder extends Seeder
             
             // Проверяем существует ли исходное изображение
             if (Storage::disk('public')->exists($sourcePath)) {
-                // Копируем файл
                 Storage::disk('public')->copy($sourcePath, $destPath);
                 $imagePath = $destPath;
                 $this->command->line("Мероприятие {$i}: изображение загружено - {$imageName}");
